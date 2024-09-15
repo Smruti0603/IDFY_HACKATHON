@@ -216,3 +216,103 @@ def classify():
 if __name__ == '__main__':
     app.run(debug=True)
 
+#For SQL DATABASE INTEGRATION
+# from flask import Flask, request, jsonify, render_template
+# import pandas as pd
+# from sqlalchemy import create_engine
+# import boto3
+
+# app = Flask(__name__)
+
+# # Database connection parameters
+# db_user = 'your_username'
+# db_password = 'your_password'
+# db_host = 'localhost'
+# db_name = 'your_database_name'
+
+# # S3 connection parameters
+# aws_access_key_id = 'your_access_key_id'
+# aws_secret_access_key = 'your_secret_access_key'
+# bucket_name = 'your_bucket_name'
+
+# # Create a SQLAlchemy engine
+# connection_string = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
+# engine = create_engine(connection_string)
+
+# # Initialize an S3 client
+# s3_client = boto3.client(
+#     's3',
+#     aws_access_key_id=aws_access_key_id,
+#     aws_secret_access_key=aws_secret_access_key
+# )
+
+# # Define sensitivity levels for PII
+# sensitivity = {
+#     'Name': 'Low',
+#     'Email': 'Medium',
+#     'SSN': 'High',
+#     'Credit Card Number': 'High',
+#     'IP Address': 'Medium'
+# }
+
+# tef = {'Low': 0.1, 'Medium': 0.3, 'High': 0.7}
+# vulnerability = {'Low': 0.1, 'Medium': 0.5, 'High': 0.9}
+# loss_magnitude = {'Low': 10, 'Medium': 50, 'High': 200}
+
+# @app.route('/')
+# def index():
+#     return render_template('index.html')
+
+# @app.route('/api/v1/data/ingest', methods=['POST'])
+# def ingest_data():
+#     source = request.json['source']
+#     if source == 'csv':
+#         data = request.json['data']
+#         df = pd.DataFrame(data)
+#     elif source == 'sql':
+#         query = request.json['query']
+#         df = pd.read_sql(query, engine)
+#     elif source == 's3':
+#         file_key = request.json['file_key']
+#         s3_client.download_file(bucket_name, file_key, 'downloaded_file.csv')
+#         df = pd.read_csv('downloaded_file.csv')
+#     else:
+#         return jsonify({'status': 'failure', 'message': 'Invalid data source'}), 400
+
+#     return jsonify({
+#         'status': 'success',
+#         'data': df.to_dict(orient='records')
+#     })
+
+# @app.route('/api/v1/pii/classify', methods=['POST'])
+# def classify_pii():
+#     data = request.json['data']
+#     df = pd.DataFrame(data)
+
+#     df_classified = df.copy()
+#     df_classified['Sensitivity'] = df.columns.map(sensitivity)
+
+#     return jsonify({
+#         'status': 'success',
+#         'classified_data': df_classified.to_dict(orient='records')
+#     })
+
+# @app.route('/api/v1/risk/calculate', methods=['POST'])
+# def calculate_risk():
+#     classified_data = request.json['classified_data']
+#     df_classified = pd.DataFrame(classified_data)
+
+#     df_classified['TEF'] = df_classified['Sensitivity'].map(tef)
+#     df_classified['Vulnerability'] = df_classified['Sensitivity'].map(vulnerability)
+#     df_classified['Loss Magnitude'] = df_classified['Sensitivity'].map(loss_magnitude)
+#     df_classified['Risk'] = df_classified['TEF'] * df_classified['Vulnerability'] * df_classified['Loss Magnitude']
+
+#     return jsonify({
+#         'status': 'success',
+#         'risk_scores': df_classified[['Risk']].to_dict(orient='records')
+#     })
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+
