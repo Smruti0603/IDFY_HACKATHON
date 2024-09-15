@@ -25,7 +25,7 @@ This application is designed to detect Personally Identifiable Information (PII)
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/pii-detection-app.git
+   git clone https://github.com/Smruti0603/IDFY_HACKATHON.git
    cd pii-detection-app
    ```
 
